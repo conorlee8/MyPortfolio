@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, useSpring } from 'framer-motion';
+import { motion, useSpring, useInView } from 'framer-motion';
 
 interface ASCIIPortraitProps {
   src: string;
@@ -12,10 +12,25 @@ interface ASCIIPortraitProps {
 export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPortraitProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const asciiRef = useRef<HTMLPreElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const animationRef = useRef<number | undefined>(undefined);
+
+  // Detect when element is in view (for mobile scroll reveal)
+  const isInView = useInView(containerRef, { amount: 0.6 });
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Smooth spring animation for reveal
   const revealProgress = useSpring(0, {
@@ -58,10 +73,14 @@ export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPo
 
   const colors = variantStyles[variant];
 
-  // Animate reveal on hover
+  // Animate reveal - on mobile: scroll into view, on desktop: hover
   useEffect(() => {
-    revealProgress.set(isHovering ? 1 : 0);
-  }, [isHovering, revealProgress]);
+    if (isMobile) {
+      revealProgress.set(isInView ? 1 : 0);
+    } else {
+      revealProgress.set(isHovering ? 1 : 0);
+    }
+  }, [isHovering, isInView, isMobile, revealProgress]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -250,6 +269,7 @@ export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPo
 
         {/* ASCII Container */}
         <div
+          ref={containerRef}
           className="relative overflow-hidden rounded-lg"
           style={{
             background: 'rgba(0, 0, 0, 0.95)',
@@ -257,8 +277,8 @@ export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPo
             border: `1px solid ${colors.primary}`,
           }}
           onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
+          onMouseEnter={() => !isMobile && setIsHovering(true)}
+          onMouseLeave={() => !isMobile && setIsHovering(false)}
         >
           {/* Hidden canvas for image processing */}
           <canvas ref={canvasRef} className="hidden" />
@@ -275,7 +295,7 @@ export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPo
               textShadow: `0 0 5px ${colors.glow}, 0 0 10px ${colors.glow}`,
               WebkitFontSmoothing: 'none',
               fontSmooth: 'never',
-              opacity: isHovering ? 0.3 : 1,
+              opacity: (isMobile ? isInView : isHovering) ? 0.3 : 1,
               transition: 'opacity 0.6s ease-out',
             }}
           >
@@ -350,11 +370,11 @@ export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPo
             style={{ color: colors.secondary }}
             initial={{ opacity: 0 }}
             animate={{
-              opacity: isHovering ? 0 : [0, 1, 0.8, 1, 0.8, 1, 0]
+              opacity: (isMobile ? isInView : isHovering) ? 0 : [0, 1, 0.8, 1, 0.8, 1, 0]
             }}
             transition={{ delay: 2, duration: 4 }}
           >
-            [HOVER TO REVEAL PHOTO]
+            {isMobile ? '[SCROLL TO REVEAL PHOTO]' : '[HOVER TO REVEAL PHOTO]'}
           </motion.div>
         </div>
 
