@@ -15,7 +15,7 @@ export default function ASCIIPortrait({ src, alt, variant = 'default' }: ASCIIPo
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
 
   // Smooth spring animation for reveal
   const revealProgress = useSpring(0, {

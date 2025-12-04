@@ -34,7 +34,7 @@ export default function RPGDialogue({
   };
 
   // Smooth easing
-  const smoothEasing = [0.4, 0, 0.2, 1];
+  const smoothEasing: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
   return (
     <div className="relative z-20 flex h-full w-full items-center justify-center p-6 sm:p-8">

@@ -133,6 +133,7 @@ export default function ProfileImage({
               top: '50%',
               marginLeft: '-4px',
               marginTop: '-4px',
+              transformOrigin: `${60 + i * 20}px 0px`,
             }}
             animate={{
               rotate: 360,
@@ -144,9 +145,6 @@ export default function ProfileImage({
               repeat: Infinity,
               ease: 'linear',
               delay: i * 1,
-            }}
-            style={{
-              transformOrigin: `${60 + i * 20}px 0px`,
             }}
           />
         ))}

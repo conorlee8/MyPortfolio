@@ -154,7 +154,7 @@ export default function GitHubParticleGalaxy({ username, variant = 'default' }: 
         const particleCount = Math.min(commits.length, 5000);
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
+        const colorArray = new Float32Array(particleCount * 3);
         const sizes = new Float32Array(particleCount);
 
         // Language to color mapping
@@ -186,16 +186,16 @@ export default function GitHubParticleGalaxy({ username, variant = 'default' }: 
 
           // Color based on language
           const langColor = langColors[commit.language || 'Unknown'] || langColors.Unknown;
-          colors[i * 3] = langColor.r;
-          colors[i * 3 + 1] = langColor.g;
-          colors[i * 3 + 2] = langColor.b;
+          colorArray[i * 3] = langColor.r;
+          colorArray[i * 3 + 1] = langColor.g;
+          colorArray[i * 3 + 2] = langColor.b;
 
           // Size based on commit count
           sizes[i] = Math.min(commit.count * 0.5 + 0.5, 3);
         });
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
         geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
         // Custom shader material for glow effect

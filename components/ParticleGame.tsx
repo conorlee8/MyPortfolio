@@ -13,7 +13,7 @@ export default function ParticleGame({ onSectionUnlock, onCollectedChange }: Par
   const particlesRef = useRef<THREE.Points>(null);
   const mousePos = useRef(new THREE.Vector3(0, 0, 0));
   const targetPos = useRef(new THREE.Vector3(0, 0, 0));
-  const velocities = useRef<Float32Array>();
+  const velocities = useRef<Float32Array | null>(null);
   const [collected, setCollected] = useState(0);
   const [totalParticles] = useState(10000);
   const targetCollected = 100; // Need to collect 100 particles
@@ -179,15 +179,11 @@ export default function ParticleGame({ onSectionUnlock, onCollectedChange }: Par
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={totalParticles}
-            array={positions}
-            itemSize={3}
+            args={[positions, 3]}
           />
           <bufferAttribute
             attach="attributes-color"
-            count={totalParticles}
-            array={colors}
-            itemSize={3}
+            args={[colors, 3]}
           />
         </bufferGeometry>
         <pointsMaterial
