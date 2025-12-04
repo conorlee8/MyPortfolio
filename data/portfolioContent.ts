@@ -141,37 +141,36 @@ export const skillGroups: SkillGroup[] = [
 
 export const aboutContent = {
   freelance: {
-    whoIAm: `A versatile developer who thrives on bringing client visions to life. I specialize in delivering
-    high-quality, custom solutions that meet unique project requirements. With a focus on rapid iteration and
-    client communication, I ensure your project succeeds.`,
+    whoIAm: `Product Manager turned Full-Stack Developer who brings 5+ years of bridging business and technical teams. Led 75+ SaaS deployments at UFODrive and REEF Technology, managing implementations from requirements to launch. Completed UT Austin's Full-Stack program, now building end-to-end applications that combine product strategy with hands-on development.`,
     whatIDo: [
-      'Custom web applications from scratch',
-      'Quick-turnaround landing pages',
-      'Interactive user experiences',
-      'Performance optimization & SEO',
-      'Flexible project-based engagement',
+      'Full-stack development (React, Node.js, MongoDB)',
+      'SaaS platform deployments & integrations',
+      'Custom web applications with CI/CD pipelines',
+      'Product strategy & technical implementations',
+      'Process automation & workflow optimization',
+      'Client communication & project delivery',
     ],
   },
   fulltime: {
-    whoIAm: `A collaborative team player who excels in building scalable, maintainable systems. I bring
-    expertise in modern development practices, code quality, and cross-functional collaboration. I'm passionate
-    about continuous learning and contributing to team success.`,
+    whoIAm: `Product Manager with proven track record leading 75+ SaaS deployments and recently completed UT Austin's Full-Stack Web Development program. Experienced in bridging technical requirements between customers and engineering teams, ensuring 98% on-time delivery. Now bringing both product management expertise and hands-on development skills to build scalable, maintainable systems.`,
     whatIDo: [
-      'Architecting scalable applications',
-      'Code reviews & best practices',
-      'Mentoring junior developers',
-      'Agile team collaboration',
-      'Long-term product development',
+      'Full-stack development (React, TypeScript, Node.js)',
+      'Product management & stakeholder alignment',
+      'Cross-functional team leadership',
+      'Technical documentation & training materials',
+      'Agile/Scrum methodologies & sprint planning',
+      'API integrations & database architecture',
     ],
   },
   default: {
-    whoIAm: `A passionate developer specializing in creating immersive web experiences that blend cutting-edge
-    technology with thoughtful design. I believe in building products that are both beautiful and functional.`,
+    whoIAm: `Product Manager turned Full-Stack Developer with 5+ years bridging business and technical teams. Led 75+ SaaS deployments across enterprise accounts, managing implementations from requirements gathering to production launch. Recently completed UT Austin's Full-Stack program, now building end-to-end applications combining product strategy with hands-on development.`,
     whatIDo: [
-      'Full-stack web development',
-      '3D interactive experiences',
-      'UI/UX design & prototyping',
-      'Performance optimization',
+      'Full-stack development (React, Node.js, MongoDB, MySQL)',
+      'Product management & technical implementations',
+      'SaaS platform deployments & API integrations',
+      'Cross-functional team leadership & stakeholder management',
+      'Process automation & workflow optimization',
+      'Technical documentation & training materials',
     ],
   },
 };

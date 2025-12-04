@@ -6,6 +6,7 @@ import HackingInterface from './HackingInterface';
 import Scene from './Scene';
 import Hero3D from './Hero3D';
 import ScrollMinimap from './ScrollMinimap';
+import ProjectBuilderModal from './ProjectBuilderModal';
 import { usePath } from '@/contexts/PathContext';
 
 interface GameHeroProps {
@@ -14,6 +15,7 @@ interface GameHeroProps {
 
 export default function GameHero({ onUnlock }: GameHeroProps) {
   const [showGame, setShowGame] = useState(true);
+  const [showProjectModal, setShowProjectModal] = useState(false);
   const { selectedPath } = usePath();
 
   const handleGameComplete = () => {
@@ -60,66 +62,55 @@ export default function GameHero({ onUnlock }: GameHeroProps) {
       {showGame ? (
         <HackingInterface onComplete={handleGameComplete} />
       ) : (
-        <section className="grain relative h-screen w-full overflow-hidden">
-          {/* Mesh Gradient Orbs - Dynamic colors based on path */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div
-              className={`mesh-orb mesh-orb-1 bg-gradient-to-br ${
-                selectedPath === 'freelance'
-                  ? 'from-green-500 to-emerald-400'
-                  : selectedPath === 'fulltime'
-                  ? 'from-red-500 to-rose-400'
-                  : 'from-cyan-bright to-electric-purple'
-              }`}
-              style={{
-                width: '600px',
-                height: '600px',
-                top: '-200px',
-                right: '-100px',
-              }}
-            />
-            <div
-              className={`mesh-orb mesh-orb-2 bg-gradient-to-tr ${
-                selectedPath === 'freelance'
-                  ? 'from-emerald-400 to-green-600'
-                  : selectedPath === 'fulltime'
-                  ? 'from-rose-400 to-red-600'
-                  : 'from-electric-purple to-indigo-600'
-              }`}
-              style={{
-                width: '500px',
-                height: '500px',
-                bottom: '-150px',
-                left: '-100px',
-              }}
-            />
-            <div
-              className={`mesh-orb mesh-orb-3 bg-gradient-to-br ${
-                selectedPath === 'freelance'
-                  ? 'from-green-400 to-emerald-500'
-                  : selectedPath === 'fulltime'
-                  ? 'from-red-400 to-rose-500'
-                  : 'from-blue-500 to-cyan-bright'
-              }`}
-              style={{
-                width: '400px',
-                height: '400px',
-                top: '40%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            />
-          </div>
+        <section className={`grain relative h-screen w-full overflow-hidden ${selectedPath ? 'bg-transparent' : 'bg-black'}`}>
+          {/* Mesh Gradient Orbs - Only for browse/neutral mode (no path selected) */}
+          {!selectedPath && (
+            <div className="absolute inset-0 overflow-hidden">
+              <div
+                className="mesh-orb mesh-orb-1 bg-gradient-to-br from-cyan-bright to-electric-purple"
+                style={{
+                  width: '700px',
+                  height: '700px',
+                  top: '-250px',
+                  right: '-150px',
+                }}
+              />
+              <div
+                className="mesh-orb mesh-orb-2 bg-gradient-to-tr from-electric-purple to-indigo-600"
+                style={{
+                  width: '600px',
+                  height: '600px',
+                  bottom: '-200px',
+                  left: '-150px',
+                }}
+              />
+              <div
+                className="mesh-orb mesh-orb-3 bg-gradient-to-br from-blue-500 to-cyan-bright"
+                style={{
+                  width: '500px',
+                  height: '500px',
+                  top: '40%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              />
 
-          {/* 3D Background */}
-          <div className="absolute inset-0 z-0">
-            <Scene>
-              <Hero3D gameMode={false} />
-            </Scene>
-          </div>
+              {/* Dark gradient overlay for seamless blending */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+            </div>
+          )}
+
+          {/* 3D Background - Only for browse/neutral mode */}
+          {!selectedPath && (
+            <div className="absolute inset-0 z-0">
+              <Scene>
+                <Hero3D gameMode={false} />
+              </Scene>
+            </div>
+          )}
 
           {/* Hero Content */}
-          <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 sm:px-6">
+          <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6 py-20 sm:px-8">
             <div className="mx-auto w-full max-w-5xl text-center">
               <div className="mb-6 sm:mb-8">
                 <span className="glass inline-block rounded-full px-4 py-2 text-xs font-medium tracking-wide text-white/90 sm:px-6 sm:text-sm">
@@ -139,20 +130,29 @@ export default function GameHero({ onUnlock }: GameHeroProps) {
                 }`}>{heroContent.highlight}</span>
               </h1>
 
-              <p className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-white/70 sm:mb-12 sm:text-xl md:text-2xl">
+              <p className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-white/70 sm:mb-10 sm:text-xl md:text-2xl">
                 {heroContent.description}
               </p>
 
-              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+              <div className="relative z-20 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+                {selectedPath === 'freelance' ? (
+                  <button
+                    onClick={() => setShowProjectModal(true)}
+                    className={`glass-gradient-button group relative inline-flex w-full items-center justify-center overflow-hidden rounded-full bg-gradient-to-r ${heroContent.accentGradient} px-10 py-4 text-base font-semibold text-white shadow-2xl transition-all hover:scale-105 sm:w-auto sm:px-12 sm:py-4 sm:text-lg`}
+                  >
+                    <span className="relative z-10">{heroContent.primaryCTA}</span>
+                  </button>
+                ) : (
+                  <a
+                    href={selectedPath === 'fulltime' ? '#contact' : '#work'}
+                    className={`glass-gradient-button group relative inline-flex w-full items-center justify-center overflow-hidden rounded-full bg-gradient-to-r ${heroContent.accentGradient} px-10 py-4 text-base font-semibold text-white shadow-2xl transition-all hover:scale-105 sm:w-auto sm:px-12 sm:py-4 sm:text-lg`}
+                  >
+                    <span className="relative z-10">{heroContent.primaryCTA}</span>
+                  </a>
+                )}
                 <a
-                  href="#work"
-                  className={`group relative w-full overflow-hidden rounded-full bg-gradient-to-r ${heroContent.accentGradient} px-8 py-3 font-medium text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl ${heroContent.glowColor} sm:w-auto sm:px-8 sm:py-4`}
-                >
-                  {heroContent.primaryCTA}
-                </a>
-                <a
-                  href="#contact"
-                  className="glass w-full rounded-full px-8 py-3 font-medium text-white transition-all hover:bg-white/10 sm:w-auto sm:px-8 sm:py-4"
+                  href={selectedPath === 'freelance' ? '#work' : '#contact'}
+                  className="glass-button inline-flex w-full items-center justify-center rounded-full px-10 py-4 text-base font-semibold text-white shadow-xl transition-all hover:scale-105 sm:w-auto sm:px-12 sm:py-4 sm:text-lg"
                 >
                   {heroContent.secondaryCTA}
                 </a>
@@ -164,6 +164,12 @@ export default function GameHero({ onUnlock }: GameHeroProps) {
           </div>
         </section>
       )}
+
+      {/* Project Builder Modal for Freelance */}
+      <ProjectBuilderModal
+        isOpen={showProjectModal}
+        onClose={() => setShowProjectModal(false)}
+      />
     </>
   );
 }
